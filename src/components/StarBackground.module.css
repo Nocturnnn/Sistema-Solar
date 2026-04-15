@@ -1,0 +1,77 @@
+.background {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.deepField,
+.nebulaPrimary,
+.nebulaSecondary,
+.grid,
+.vignette {
+  position: absolute;
+  inset: 0;
+}
+
+.deepField {
+  background:
+    radial-gradient(circle at 15% 18%, var(--accent-soft) 0%, transparent 28%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.04) 0%, transparent 24%),
+    radial-gradient(circle at 50% 74%, rgba(255, 255, 255, 0.03) 0%, transparent 42%);
+  opacity: 0.95;
+}
+
+.nebulaPrimary {
+  background:
+    radial-gradient(circle at 20% 30%, var(--accent-soft) 0%, transparent 36%),
+    radial-gradient(circle at 72% 65%, rgba(255, 255, 255, 0.02) 0%, transparent 30%);
+  filter: blur(24px);
+  opacity: 0.95;
+  transform: scale(1.08);
+}
+
+.nebulaSecondary {
+  background:
+    radial-gradient(circle at 72% 22%, color-mix(in srgb, var(--accent-alt) 22%, transparent) 0%, transparent 26%),
+    radial-gradient(circle at 50% 90%, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 32%);
+  filter: blur(70px);
+  opacity: 0.7;
+}
+
+.grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 8rem 8rem;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.22), transparent 80%);
+  opacity: 0.3;
+}
+
+.vignette {
+  background:
+    radial-gradient(circle at center, transparent 48%, rgba(2, 4, 10, 0.44) 80%),
+    linear-gradient(180deg, rgba(3, 5, 12, 0.16), rgba(3, 5, 12, 0.42));
+}
+
+.star {
+  position: absolute;
+  display: block;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.28);
+  animation: twinkle ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+  from {
+    transform: scale(0.85);
+    opacity: 0.25;
+  }
+
+  to {
+    transform: scale(1.45);
+    opacity: 0.9;
+  }
+}
