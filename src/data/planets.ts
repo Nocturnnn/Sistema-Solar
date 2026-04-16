@@ -69,7 +69,7 @@ export const planets: Planet[] = [
     relativeSize: 0.98,
     stats: [
       { label: 'Cobertura de água', value: '71%' },
-      { label: 'Atmosfera', value: 'Rica em nitrogênio' },
+      { label: 'Atmosfera', value: 'habitável' },
       { label: 'Luas', value: '1 satélite' },
     ],
     theme: {

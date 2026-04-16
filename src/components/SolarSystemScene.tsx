@@ -1,4 +1,4 @@
-import { startTransition, useState, type CSSProperties } from 'react'
+import { startTransition, useEffect, useState, type CSSProperties } from 'react'
 import { defaultPlanetId, planets } from '../data/planets'
 import type { PlanetId } from '../types/planet'
 import { OrbitButtons } from './OrbitButtons'
@@ -8,11 +8,51 @@ import { StarBackground } from './StarBackground'
 import styles from './SolarSystemScene.module.css'
 
 const initialPlanet = planets.find((planet) => planet.id === defaultPlanetId) ?? planets[0]
+const activePlanetStorageKey = 'solar-system:active-planet'
+const planetIds = new Set<PlanetId>(planets.map((planet) => planet.id))
+
+function isPlanetId(value: string): value is PlanetId {
+  return planetIds.has(value as PlanetId)
+}
+
+function getInitialPlanetId() {
+  if (typeof window === 'undefined') {
+    return initialPlanet.id
+  }
+
+  try {
+    const storedPlanetId = window.localStorage.getItem(activePlanetStorageKey)
+
+    if (storedPlanetId && isPlanetId(storedPlanetId)) {
+      return storedPlanetId
+    }
+  } catch {
+    // Keep the interface working even if browser storage is unavailable.
+  }
+
+  return initialPlanet.id
+}
+
+function persistActivePlanetId(planetId: PlanetId) {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  try {
+    window.localStorage.setItem(activePlanetStorageKey, planetId)
+  } catch {
+    // Keep the interface working even if browser storage is unavailable.
+  }
+}
 
 export function SolarSystemScene() {
-  const [activePlanetId, setActivePlanetId] = useState<PlanetId>(initialPlanet.id)
+  const [activePlanetId, setActivePlanetId] = useState<PlanetId>(() => getInitialPlanetId())
   const activePlanet =
     planets.find((planet) => planet.id === activePlanetId) ?? initialPlanet
+
+  useEffect(() => {
+    persistActivePlanetId(activePlanetId)
+  }, [activePlanetId])
 
   const sceneStyle = {
     '--accent': activePlanet.theme.accent,
@@ -24,6 +64,8 @@ export function SolarSystemScene() {
   } as CSSProperties
 
   const handleSelect = (planetId: PlanetId) => {
+    persistActivePlanetId(planetId)
+
     startTransition(() => {
       setActivePlanetId(planetId)
     })
