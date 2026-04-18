@@ -1,4 +1,5 @@
-import { startTransition, useEffect, useState, type CSSProperties } from 'react'
+import { startTransition, useEffect, useRef, useState, type CSSProperties } from 'react'
+import interstellarTheme from '../assets/music/Hans Zimmer - Interstellar  Imperial Orchestra - Imperial Orchestra (youtube).mp3'
 import { defaultPlanetId, planets } from '../data/planets'
 import type { PlanetId } from '../types/planet'
 import { OrbitButtons } from './OrbitButtons'
@@ -47,12 +48,23 @@ function persistActivePlanetId(planetId: PlanetId) {
 
 export function SolarSystemScene() {
   const [activePlanetId, setActivePlanetId] = useState<PlanetId>(() => getInitialPlanetId())
+  const [isMusicEnabled, setIsMusicEnabled] = useState(false)
+  const [musicError, setMusicError] = useState<string | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
   const activePlanet =
     planets.find((planet) => planet.id === activePlanetId) ?? initialPlanet
 
   useEffect(() => {
     persistActivePlanetId(activePlanetId)
   }, [activePlanetId])
+
+  useEffect(() => {
+    const audio = audioRef.current
+
+    return () => {
+      audio?.pause()
+    }
+  }, [])
 
   const sceneStyle = {
     '--accent': activePlanet.theme.accent,
@@ -71,11 +83,54 @@ export function SolarSystemScene() {
     })
   }
 
+  const handleToggleMusic = async () => {
+    const audio = audioRef.current
+
+    if (!audio) {
+      return
+    }
+
+    setMusicError(null)
+
+    if (isMusicEnabled) {
+      audio.pause()
+      setIsMusicEnabled(false)
+      return
+    }
+
+    try {
+      audio.volume = 0.42
+      await audio.play()
+      setIsMusicEnabled(true)
+    } catch {
+      setMusicError('O navegador não conseguiu iniciar a trilha sonora.')
+      setIsMusicEnabled(false)
+    }
+  }
+
   return (
     <main className={styles.scene} style={sceneStyle}>
       <StarBackground />
 
       <div className={styles.frame} aria-hidden="true" />
+
+      <div className={styles.audioDock}>
+        {musicError ? <p className={styles.audioMessage}>{musicError}</p> : null}
+
+        <button
+          type="button"
+          className={styles.audioToggle}
+          data-active={isMusicEnabled}
+          onClick={handleToggleMusic}
+          aria-pressed={isMusicEnabled}
+          aria-label={
+            isMusicEnabled ? 'Desativar trilha sonora de Interstellar' : 'Ativar trilha sonora de Interstellar'
+          }
+        >
+          <span className={styles.audioLabel}>Interstellar</span>
+          <span className={styles.audioState}>{isMusicEnabled ? 'Ligado' : 'Desligado'}</span>
+        </button>
+      </div>
 
       <header className={styles.header}>
         <PlanetInfoPanel planet={activePlanet} />
@@ -94,6 +149,8 @@ export function SolarSystemScene() {
         />
         <PlanetDisplay planet={activePlanet} />
       </section>
+
+      <audio ref={audioRef} src={interstellarTheme} loop preload="auto" aria-hidden="true" />
     </main>
   )
 }
