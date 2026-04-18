@@ -13,6 +13,15 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
     0 28px 60px rgba(0, 0, 0, 0.28),
     0 0 0 1px rgba(255, 255, 255, 0.02);
+  contain: layout paint;
+}
+
+.panel[data-performance='true'] {
+  backdrop-filter: none;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 16px 36px rgba(0, 0, 0, 0.22),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
 }
 
 .topline {
@@ -128,6 +137,11 @@
   .panel {
     padding: 1rem;
     border-radius: 1.5rem;
+    backdrop-filter: none;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 16px 32px rgba(0, 0, 0, 0.2),
+      0 0 0 1px rgba(255, 255, 255, 0.02);
   }
 
   .topline {

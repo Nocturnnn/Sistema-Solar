@@ -4,13 +4,19 @@ import styles from './PlanetInfoPanel.module.css'
 
 type PlanetInfoPanelProps = {
   planet: Planet
+  performanceMode?: boolean
 }
 
-export function PlanetInfoPanel({ planet }: PlanetInfoPanelProps) {
+const richEase: [number, number, number, number] = [0.22, 1, 0.36, 1]
+
+export function PlanetInfoPanel({
+  planet,
+  performanceMode = false,
+}: PlanetInfoPanelProps) {
   return (
-    <section className={styles.panel}>
+    <section className={styles.panel} data-performance={performanceMode}>
       <div className={styles.topline}>
-        <span className={styles.label}>Observatório Planetário</span>
+        <span className={styles.label}>Observatorio Planetario</span>
         <span className={styles.label}>Arquivo solar / 08 mundos</span>
       </div>
 
@@ -18,10 +24,25 @@ export function PlanetInfoPanel({ planet }: PlanetInfoPanelProps) {
         <motion.div
           key={planet.id}
           className={styles.content}
-          initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          exit={{ opacity: 0, y: -16, filter: 'blur(8px)' }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          initial={
+            performanceMode
+              ? { opacity: 0, y: 10 }
+              : { opacity: 0, y: 20, filter: 'blur(10px)' }
+          }
+          animate={
+            performanceMode
+              ? { opacity: 1, y: 0 }
+              : { opacity: 1, y: 0, filter: 'blur(0px)' }
+          }
+          exit={
+            performanceMode
+              ? { opacity: 0, y: -8 }
+              : { opacity: 0, y: -16, filter: 'blur(8px)' }
+          }
+          transition={{
+            duration: performanceMode ? 0.24 : 0.6,
+            ease: performanceMode ? 'easeOut' : richEase,
+          }}
         >
           <div className={styles.headingRow}>
             <div>

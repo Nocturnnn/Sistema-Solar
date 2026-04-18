@@ -6,6 +6,7 @@
   min-height: clamp(31rem, 72vh, 50rem);
   padding-top: clamp(6rem, 12vw, 8.5rem);
   padding-bottom: clamp(4rem, 8vw, 7rem);
+  contain: layout paint;
 }
 
 .haloPrimary,
@@ -179,6 +180,38 @@
   -webkit-user-drag: none;
   position: relative;
   z-index: 1;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.shell[data-performance='true'] .haloPrimary {
+  filter: blur(22px);
+  opacity: 0.64;
+}
+
+.shell[data-performance='true'] .shadowPool {
+  filter: blur(10px);
+  opacity: 0.7;
+}
+
+.shell[data-performance='true'] .planetAura {
+  filter: blur(10px);
+  transform: scale(1.08);
+  opacity: 0.78;
+}
+
+.shell[data-performance='true'] .planetBloom {
+  filter: blur(14px);
+  opacity: 0.6;
+}
+
+.shell[data-performance='true'] .rimLight,
+.shell[data-performance='true'] .specular {
+  opacity: 0.72;
+}
+
+.shell[data-performance='true'] .planet {
+  filter: drop-shadow(0 20px 44px var(--accent-shadow));
 }
 
 .caption {

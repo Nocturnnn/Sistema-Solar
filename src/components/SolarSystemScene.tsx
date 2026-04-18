@@ -1,6 +1,7 @@
 import { startTransition, useEffect, useRef, useState, type CSSProperties } from 'react'
 import interstellarTheme from '../assets/music/Hans Zimmer - Interstellar  Imperial Orchestra - Imperial Orchestra (youtube).mp3'
 import { defaultPlanetId, planets } from '../data/planets'
+import { usePerformanceMode } from '../hooks/usePerformanceMode'
 import type { PlanetId } from '../types/planet'
 import { OrbitButtons } from './OrbitButtons'
 import { PlanetDisplay } from './PlanetDisplay'
@@ -51,6 +52,7 @@ export function SolarSystemScene() {
   const [isMusicEnabled, setIsMusicEnabled] = useState(false)
   const [musicError, setMusicError] = useState<string | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const performanceMode = usePerformanceMode()
   const activePlanet =
     planets.find((planet) => planet.id === activePlanetId) ?? initialPlanet
 
@@ -109,8 +111,8 @@ export function SolarSystemScene() {
   }
 
   return (
-    <main className={styles.scene} style={sceneStyle}>
-      <StarBackground />
+    <main className={styles.scene} style={sceneStyle} data-performance={performanceMode}>
+      <StarBackground performanceMode={performanceMode} />
 
       <div className={styles.frame} aria-hidden="true" />
 
@@ -133,7 +135,7 @@ export function SolarSystemScene() {
       </div>
 
       <header className={styles.header}>
-        <PlanetInfoPanel planet={activePlanet} />
+        <PlanetInfoPanel planet={activePlanet} performanceMode={performanceMode} />
       </header>
 
       <section className={styles.stage}>
@@ -146,11 +148,12 @@ export function SolarSystemScene() {
           planets={planets}
           activePlanetId={activePlanet.id}
           onSelect={handleSelect}
+          performanceMode={performanceMode}
         />
-        <PlanetDisplay planet={activePlanet} />
+        <PlanetDisplay planet={activePlanet} performanceMode={performanceMode} />
       </section>
 
-      <audio ref={audioRef} src={interstellarTheme} loop preload="auto" aria-hidden="true" />
+      <audio ref={audioRef} src={interstellarTheme} loop preload="none" aria-hidden="true" />
     </main>
   )
 }
